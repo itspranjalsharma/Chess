@@ -50,8 +50,17 @@ io.on("connection", function (uniquesocket) {
       const result = chess.move(move);
       if (result) {
         currentPlayer = chess.turn();
+        io.emit("move" , move)
+        io.emit("boardState" ,   chess.fen())
       }
-    } catch (error) {}
+      else{
+        console.log("Invalid move" , move)
+        uniquesocket.emit("invalidMove" , move)
+      }
+    } catch (error) {
+      console.log(error)
+        uniquesocket.emit("invalidMove" , move)
+    }
   });
 });
 server.listen(3000, function () {
